@@ -13,7 +13,8 @@ interface AuthContextProps {
   token: string | null;
   setToken: React.Dispatch<React.SetStateAction<string | null>>;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, name: string, password: string) => Promise<void>;
+  register: (email: string, username: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
@@ -22,16 +23,16 @@ export const AuthContext = createContext<AuthContextProps>({
   login: async () => {},
   register: async () => {},
   setToken: () => {},
+  logout: async () => {},
 });
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useState<string | null>(null);
 
-  async function register(email: string, name: string, password: string) {
+  async function register(email: string, username: string, password: string) {
     try {
-      const res = await authApi.post("api/register", { email, name, password });
-      console.log(res);
+      const res = await authApi.post("api/register", { email, username, password });
     } catch (error) {
       console.log(error);
     }
@@ -39,18 +40,20 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   async function login(email: string, password: string) {
     try {
-      // const res = await authApi.post("api/login", { email, password });
-      setToken("token");
-      setUser({ username: "yi", email: "u", token: "token" });
-      redirect("/");
-      // console.log(res);
+      const res = await authApi.post("api/login", { email, password });
+      setToken(res.data.access_token);
     } catch (error) {
       console.log(error);
     }
   }
+  async function logout() {
+    await authApi.post("api/logout");
+    setToken(null);
+    setUser(null);
+  }
 
   return (
-    <AuthContext.Provider value={{ user, token, setToken, login, register }}>
+    <AuthContext.Provider value={{ user, token, setToken, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
