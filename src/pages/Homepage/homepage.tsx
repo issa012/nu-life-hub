@@ -1,4 +1,5 @@
-import banner from "@/assets/banner.png";
+import { Link } from "react-router-dom";
+
 import { Calendar } from "@/components/ui/calendar";
 import {
   Card,
@@ -8,13 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+
 const Homepage = () => {
   return (
     <div className="grid grid-cols-[1fr_auto] gap-7">
       <div className="h-full overflow-hidden">
         {events.map((event) => (
-          <Link to="#">
+          <Link key={event.title} to="#">
             <Card className="hover:bg-muted mt-5">
               <CardHeader>
                 <CardTitle>{event.title}</CardTitle>
@@ -47,71 +48,7 @@ const events = [
     clubIconUrl: "",
   },
   {
-    title: "Astana BALL",
-    date: new Date(),
-    desc: "Come to Astana BALL everyone",
-    imgUrl: "",
-    clubName: "Ball club",
-    clubIconUrl: "",
-  },
-  {
-    title: "Astana BALL",
-    date: new Date(),
-    desc: "Come to Astana BALL everyone",
-    imgUrl: "",
-    clubName: "Ball club",
-    clubIconUrl: "",
-  },
-  {
-    title: "Astana BALL",
-    date: new Date(),
-    desc: "Come to Astana BALL everyone",
-    imgUrl: "",
-    clubName: "Ball club",
-    clubIconUrl: "",
-  },
-  {
-    title: "Astana BALL",
-    date: new Date(),
-    desc: "Come to Astana BALL everyone",
-    imgUrl: "",
-    clubName: "Ball club",
-    clubIconUrl: "",
-  },
-  {
-    title: "Astana BALL",
-    date: new Date(),
-    desc: "Come to Astana BALL everyone",
-    imgUrl: "",
-    clubName: "Ball club",
-    clubIconUrl: "",
-  },
-  {
-    title: "Astana BALL",
-    date: new Date(),
-    desc: "Come to Astana BALL everyone",
-    imgUrl: "",
-    clubName: "Ball club",
-    clubIconUrl: "",
-  },
-  {
-    title: "Astana BALL",
-    date: new Date(),
-    desc: "Come to Astana BALL everyone",
-    imgUrl: "",
-    clubName: "Ball club",
-    clubIconUrl: "",
-  },
-  {
-    title: "Astana BALL",
-    date: new Date(),
-    desc: "Come to Astana BALL everyone",
-    imgUrl: "",
-    clubName: "Ball club",
-    clubIconUrl: "",
-  },
-  {
-    title: "Astana BALL",
+    title: "Orchestra concert",
     date: new Date(),
     desc: "Come to Astana BALL everyone",
     imgUrl: "",
