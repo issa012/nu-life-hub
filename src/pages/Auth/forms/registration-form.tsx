@@ -29,7 +29,7 @@ function RegistrationForm({
         .min(1, { message: "Email is required" })
         .email("This is not a valid email."),
       password: z.string().min(1, { message: "Password is required" }),
-      name: z.string().min(1, { message: "Name is required" }),
+      username: z.string().min(1, { message: "Name is required" }),
       confirmPassword: z.string(),
     })
     .refine((data) => data.password === data.confirmPassword, {
@@ -41,17 +41,17 @@ function RegistrationForm({
     resolver: zodResolver(registrationFormSchema),
     defaultValues: {
       email: "",
-      name: "",
+      username: "",
       password: "",
       confirmPassword: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof registrationFormSchema>) {
-    const { name, email, password } = values;
+    const { username, email, password } = values;
 
     try {
-      await register(email, name, password);
+      await register(email, username, password);
       setActiveTab("login");
       setSearchParams({ tab: "login" });
     } catch (error) {}
@@ -75,7 +75,7 @@ function RegistrationForm({
         />
         <FormField
           control={form.control}
-          name="name"
+          name="username"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Name</FormLabel>
