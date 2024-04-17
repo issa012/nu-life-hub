@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import RegistrationForm from "./forms/registration-form";
 import LoginForm from "./forms/login-form";
-import logo from "../../assets/nhl-logo.svg";
+import RegistrationForm from "./forms/registration-form";
 import NU from "../../assets/bg-nu.png";
+import logo from "../../assets/nhl-logo.svg";
 
 function AuthPage() {
   let [searchParams, setSearchParams] = useSearchParams();
