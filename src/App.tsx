@@ -1,34 +1,47 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { ProtectedPage } from "./pages/Protected/protected";
-import { Layout } from "./components/layouts/layout";
-import Homepage from "./pages/Homepage/homepage";
-import AuthPage from "./pages/Auth";
-import AuthProvider from "./context/auth-provider";
+import {
+  Route,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const router = createBrowserRouter([
-  {
-    id: "root",
-    path: "/",
-    children: [
-      {
-        element: <Layout />,
-        children: [
-          { index: true, element: <Homepage /> },
-          { path: "protected", element: <ProtectedPage /> },
-        ],
-      },
-      {
-        path: "auth",
-        element: <AuthPage />,
-      },
-    ],
+import AuthProvider from "./context/auth-provider";
+import Layout from "@/components/layouts/layout";
+import Homepage from "@/pages/Homepage/homepage";
+import AuthPage from "@/pages/Auth";
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route id="root" path="/">
+      <Route element={<Layout />}>
+        <Route index={true} element={<Homepage />} />
+        <Route path="events" />
+        <Route path="marketplace" />
+      </Route>
+      <Route path="auth" element={<AuthPage />} />
+    </Route>
+  )
+);
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      retry: 1,
+      staleTime: 5 * 1000,
+    },
   },
-]);
+});
 
 export default function App() {
   return (
-    <AuthProvider>
-      <RouterProvider router={router} fallbackElement={<p>Initial Load...</p>} />
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <RouterProvider router={router} fallbackElement={<p>Initial Load...</p>} />
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
