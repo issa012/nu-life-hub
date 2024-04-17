@@ -1,20 +1,33 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Navigate, useSearchParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LoginForm from "./forms/login-form";
 import RegistrationForm from "./forms/registration-form";
 import NU from "../../assets/bg-nu.png";
 import logo from "../../assets/nhl-logo.svg";
+import useUser from "@/hooks/useUser";
+import { useAuth } from "@/hooks/useAuth";
+import FullScreenLoading from "@/components/fullscreen-loading";
 
 function AuthPage() {
+  const { token } = useAuth();
+  const { isLoading, isFetching } = useUser();
+
   let [searchParams, setSearchParams] = useSearchParams();
   const initialTab = searchParams.get("tab") || "login";
-
   const [activeTab, setActiveTab] = useState<string>(initialTab);
 
   function handleValueChange(value: string) {
     setActiveTab(value);
     setSearchParams({ tab: activeTab == "login" ? "register" : "login" });
+  }
+
+  if (isLoading || isFetching) {
+    return <FullScreenLoading />;
+  }
+
+  if (token) {
+    return <Navigate to="/" />;
   }
 
   return (
