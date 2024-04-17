@@ -25,7 +25,6 @@ function LoginForm() {
   const loginFormSchema = z.object({
     email: z.string().min(1, { message: "Email is required" }).email("This is not a valid email."),
     password: z.string().min(1, { message: "Password is required" }),
-    remember: z.boolean(),
   });
 
   const form = useForm<z.infer<typeof loginFormSchema>>({
@@ -33,7 +32,6 @@ function LoginForm() {
     defaultValues: {
       email: "",
       password: "",
-      remember: false,
     },
   });
 
