@@ -1,14 +1,34 @@
-import { useState } from "react";
-import { Button } from "./components/ui/button";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { ProtectedPage } from "./pages/Protected/protected";
+import { Layout } from "./components/layouts/layout";
+import Homepage from "./pages/Homepage/homepage";
+import AuthPage from "./pages/Auth";
+import AuthProvider from "./context/auth-provider";
 
-function App() {
-    const [count, setCount] = useState(0);
+const router = createBrowserRouter([
+  {
+    id: "root",
+    path: "/",
+    children: [
+      {
+        element: <Layout />,
+        children: [
+          { index: true, element: <Homepage /> },
+          { path: "protected", element: <ProtectedPage /> },
+        ],
+      },
+      {
+        path: "auth",
+        element: <AuthPage />,
+      },
+    ],
+  },
+]);
 
-    return (
-        <>
-            <Button onClick={() => setCount((prev) => prev + 1)}>{count}</Button>
-        </>
-    );
+export default function App() {
+  return (
+    <AuthProvider>
+      <RouterProvider router={router} fallbackElement={<p>Initial Load...</p>} />
+    </AuthProvider>
+  );
 }
-
-export default App;

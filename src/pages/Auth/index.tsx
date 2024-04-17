@@ -1,10 +1,10 @@
-import LoginForm from "./login-form";
-import NU from "../../assets/bg-nu.png";
-import logo from "../../assets/nhl-logo.svg";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import RegistrationForm from "./registration-form";
-import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import RegistrationForm from "./forms/registration-form";
+import LoginForm from "./forms/login-form";
+import logo from "../../assets/nhl-logo.svg";
+import NU from "../../assets/bg-nu.png";
 
 function AuthPage() {
   let [searchParams, setSearchParams] = useSearchParams();
