@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,9 +10,13 @@ import {
 import { Button } from "./ui/button";
 import { CircleUser } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import useUser from "@/hooks/useUser";
+import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu";
 
 const Status = () => {
   const { logout } = useAuth();
+  const { data: user } = useUser();
+  const navigate = useNavigate();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -21,14 +26,21 @@ const Status = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>My Profile</DropdownMenuLabel>
+        <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Settings</DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer" onClick={() => logout()}>
-          Logout
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => navigate(`user/${user?.username}/settings`)}
+          >
+            Profile
+          </DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer">Get Support</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="cursor-pointer" onClick={() => logout()}>
+            Logout
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );

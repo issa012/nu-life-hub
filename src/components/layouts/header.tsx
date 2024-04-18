@@ -1,11 +1,13 @@
 import { Menu, Search } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Input } from "../ui/input";
 import Status from "../status";
 import logo from "../../assets/nhl-logo.svg";
 import { NavItems } from "./layout";
+import { cn } from "@/lib/utils";
+import Searchbar from "../searchbar";
 
 const Header = ({ navItems }: { navItems: NavItems }) => {
   return (
@@ -24,30 +26,24 @@ const Header = ({ navItems }: { navItems: NavItems }) => {
               <span>NU Life Hub</span>
             </Link>
             {navItems.map((item) => (
-              <Link
+              <NavLink
                 to={item.href}
                 key={item.text}
-                className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground "
+                className={({ isActive }) =>
+                  cn(
+                    "mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground",
+                    isActive && "text-secondary-foreground"
+                  )
+                }
               >
                 {item.icon}
                 {item.text}
-              </Link>
+              </NavLink>
             ))}
           </nav>
         </SheetContent>
       </Sheet>
-      <div className="w-full flex-1">
-        <form>
-          <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search products..."
-              className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
-            />
-          </div>
-        </form>
-      </div>
+      <Searchbar />
       <Status />
     </header>
   );

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import logo from "../../assets/nhl-logo.svg";
 import { cn } from "@/lib/utils";
 import { NavItems } from "./layout";
@@ -18,17 +18,19 @@ const Sidebar = ({ navItems }: { navItems: NavItems }) => {
         <div className="flex-1 border-r">
           <nav className="grid items-start px-2 text-base lg:px-4 pt-4">
             {navItems.map((item) => (
-              <Link
+              <NavLink
                 to={item.href}
                 key={item.text}
-                className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 text-muted-foreground py-2 transition-all hover:bg-primary/15 hover:border-primary",
-                  location.pathname == item.href && "bg-primary/15"
-                )}
+                className={({ isActive }) =>
+                  cn(
+                    "flex items-center gap-3 rounded-lg px-3 text-muted-foreground py-2 transition-all hover:bg-primary/15 hover:border-primary",
+                    isActive && "bg-primary/15"
+                  )
+                }
               >
                 {item.icon}
                 {item.text}
-              </Link>
+              </NavLink>
             ))}
           </nav>
         </div>

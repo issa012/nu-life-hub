@@ -10,14 +10,24 @@ import AuthProvider from "./context/auth-provider";
 import Layout from "@/components/layouts/layout";
 import Homepage from "@/pages/Homepage/homepage";
 import AuthPage from "@/pages/Auth";
+import UserProfile from "./pages/UserProfile";
+import Events from "./pages/Events";
+import Marketplace from "./pages/Marketplace";
+import JobBoard from "./pages/JobBoard";
+import UserProfileLayout from "./components/layouts/userProfileLayout";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route id="root" path="/">
       <Route element={<Layout />}>
         <Route index={true} element={<Homepage />} />
-        <Route path="events" />
-        <Route path="marketplace" />
+        <Route path="events" element={<Events />} />
+        <Route path="marketplace" element={<Marketplace />} />
+        <Route path="jobs" element={<JobBoard />} />
+        <Route path="user/:id" element={<UserProfileLayout />} errorElement={<h1>NOT FOUND</h1>}>
+          <Route path="settings" element={<UserProfile />} />
+          <Route path="posts" />
+        </Route>
       </Route>
       <Route path="auth" element={<AuthPage />} />
     </Route>
