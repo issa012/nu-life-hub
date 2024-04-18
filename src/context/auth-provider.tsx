@@ -1,6 +1,5 @@
 import { authApi } from "@/authApi";
 import { createContext, useState } from "react";
-import { redirect } from "react-router-dom";
 
 export interface User {
   email: string;
@@ -31,20 +30,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
 
   async function register(email: string, username: string, password: string) {
-    try {
-      const res = await authApi.post("api/register", { email, username, password });
-    } catch (error) {
-      console.log(error);
-    }
+    await authApi.post("api/register", { email, username, password });
   }
 
   async function login(email: string, password: string) {
-    try {
-      const res = await authApi.post("api/login", { email, password });
-      setToken(res.data.access_token);
-    } catch (error) {
-      console.log(error);
-    }
+    const res = await authApi.post("api/login", { email, password });
+    setToken(res.data.access_token);
   }
   async function logout() {
     await authApi.post("api/logout");

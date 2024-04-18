@@ -54,7 +54,9 @@ function RegistrationForm({
       await register(email, username, password);
       setActiveTab("login");
       setSearchParams({ tab: "login" });
-    } catch (error) {}
+    } catch (error) {
+      form.setError("email", { message: "Incorrect credentials" });
+    }
   }
 
   return (

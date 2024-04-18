@@ -36,16 +36,15 @@ function LoginForm() {
   });
 
   async function onSubmit(values: z.infer<typeof loginFormSchema>) {
-    console.log(values);
     let { email, password } = values;
 
     try {
       await login(email, password);
+      navigate(from || "/");
     } catch (error) {
-      console.log(error);
+      form.setError("email", { message: "Incorrect email or password" });
+      form.setError("password", { message: "Incorrect email or password" });
     }
-
-    navigate(from || "/");
   }
 
   return (
