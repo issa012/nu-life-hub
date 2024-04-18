@@ -4,7 +4,7 @@ import { createContext, useState } from "react";
 export interface User {
   email: string;
   username: string;
-  token: string;
+  id: number;
 }
 
 interface AuthContextProps {
