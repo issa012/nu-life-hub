@@ -8,9 +8,7 @@ const useRefreshToken = () => {
     const response = await authApi.post("api/refresh", {
       withCredentials: true,
     });
-    setToken(() => {
-      return response.data.token;
-    });
+    setToken(response.data.token);
     return response.data.token;
   };
   return refresh;
