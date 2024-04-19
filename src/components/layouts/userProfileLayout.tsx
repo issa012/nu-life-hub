@@ -5,22 +5,22 @@ const UserProfileLayout = () => {
   return (
     <>
       <div>
-        <ul className="flex gap-10 text-primary-foreground text-3xl font-light tracking-tight transition-colors">
+        <ul className="flex gap-10 text-primary-foreground text-3xl font-extralight tracking-tight transition-colors">
           <li>
             <NavLink
-              to="settings"
+              to="profile"
               className={({ isActive }) =>
-                cn("pb-2 border-0 border-primary hover:border-b-4", isActive && "border-b-4")
+                cn("pb-2 border-0 border-primary hover:text-primary", isActive && "border-b-4")
               }
             >
-              Profile Settings
+              Profile
             </NavLink>
           </li>
           <li>
             <NavLink
               to="posts"
               className={({ isActive }) =>
-                cn("pb-2 border-primary hover:border-b-4", isActive && "border-b-4")
+                cn("pb-2 border-primary hover:text-primary", isActive && "border-b-4")
               }
             >
               Posts

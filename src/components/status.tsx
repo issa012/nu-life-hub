@@ -31,7 +31,7 @@ const Status = () => {
         <DropdownMenuGroup>
           <DropdownMenuItem
             className="cursor-pointer"
-            onClick={() => navigate(`user/${user?.username}/settings`)}
+            onClick={() => navigate(`user/${user?.username}/profile`)}
           >
             Profile
           </DropdownMenuItem>
