@@ -35,7 +35,11 @@ const Status = () => {
           >
             Profile
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">Get Support</DropdownMenuItem>
+          <DropdownMenuItem>
+            <a href="https://t.me/teksershish_bot" target="_blank">
+              Get Support
+            </a>
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="cursor-pointer" onClick={() => logout()}>
             Logout

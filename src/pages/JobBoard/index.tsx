@@ -17,7 +17,7 @@ const JobBoard = () => {
 
   return (
     <div>
-      <div>JobBoard</div>
+      <h1 className="scroll-m-20 pb-2 text-xl font-light tracking-tight">JobBoard</h1>
       <div className="grid gap-4">
         {data.results.map((job) => (
           <JobCard job={job} key={job.id} />

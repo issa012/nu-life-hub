@@ -1,4 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import { Link } from "react-router-dom";
 
 const Item = ({ item }: { item: IItem }) => {
@@ -9,11 +10,15 @@ const Item = ({ item }: { item: IItem }) => {
           <img className="aspect-auto object-cover max-h-44" src={item.image_url} />
         </div>
         <div className="">
-          <div className="flex justify-between">
+          <div className="flex justify-between mb-4">
             <span className="text-2xl font-semibold tracking-tight">{item.name}</span>
             <span className="text-2xl">{item.price} tenge</span>
           </div>
-          <p>{item.description}</p>
+          <div>
+            <Textarea className="bg-inherit resize-none" rows={5}>
+              {item.description}
+            </Textarea>
+          </div>
         </div>
       </div>
     </div>
