@@ -13,7 +13,7 @@ const JobBoard = () => {
       return res.data;
     },
   });
-  if (isLoading && isFetching) return <FullScreenLoading />;
+  if (isLoading || isFetching) return <FullScreenLoading />;
 
   return (
     <div>

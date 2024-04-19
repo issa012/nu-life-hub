@@ -2,8 +2,19 @@ import { Link, NavLink } from "react-router-dom";
 import logo from "../../assets/nhl-logo.svg";
 import { cn } from "@/lib/utils";
 import { NavItems } from "./layout";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { useQuery } from "@tanstack/react-query";
 
 const Sidebar = ({ navItems }: { navItems: NavItems }) => {
+  const axiosPrivate = useAxiosPrivate();
+  const { data, isLoading } = useQuery({
+    queryKey: ["clubs"],
+    queryFn: async () => {
+      const res = await axiosPrivate.get("api/club");
+      return res.data;
+    },
+  });
+
   return (
     <div className="hidden bg-muted/40 md:block">
       <div className="flex h-full max-h-screen flex-col">
@@ -33,6 +44,17 @@ const Sidebar = ({ navItems }: { navItems: NavItems }) => {
               </NavLink>
             ))}
           </nav>
+
+          {!isLoading && (
+            <div className="grid gap-2 px-2 text-base lg:px-4 pt-4">
+              <div className="text-xl">Club list</div>
+              {data.results.map((club) => (
+                <div className="px-4 pt-2 text-muted-foreground hover:text-primary" key={club.id}>
+                  {club.name}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

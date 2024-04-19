@@ -21,9 +21,7 @@ const EventItem = ({ event }: { event: IEvent }) => {
           <div>
             <img src={event.image_url} />
           </div>
-          <textarea readOnly={true} className="w-full">
-            {event.description}
-          </textarea>
+          <textarea readOnly={true} className="w-full" value={event.description} />
         </CardContent>
       </Card>
     </Link>
