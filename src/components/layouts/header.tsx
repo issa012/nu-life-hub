@@ -1,12 +1,11 @@
-import { Menu, Search } from "lucide-react";
+import { Link, NavLink } from "react-router-dom";
+import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { Link, NavLink } from "react-router-dom";
-import { Input } from "../ui/input";
 import Status from "../status";
 import logo from "../../assets/nhl-logo.svg";
-import { NavItems } from "./layout";
 import { cn } from "@/lib/utils";
+import { NavItems } from "./layout";
 import Searchbar from "../searchbar";
 
 const Header = ({ navItems }: { navItems: NavItems }) => {
