@@ -17,7 +17,9 @@ const Item = ({ item }: { item: IItem }) => {
           </div>
           <div className="my-2 mx-1 w-auto">
             <Link to={`${item.id}`} className="hover:underline">
-              <h3 className="text-sm line-clamp-3">{item.name}</h3>
+              <h3 className="text-sm line-clamp-3 mb-2">
+                {item.name} {item.description}
+              </h3>
             </Link>
             <div>
               <div>
