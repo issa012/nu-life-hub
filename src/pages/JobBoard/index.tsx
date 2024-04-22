@@ -1,6 +1,6 @@
 import FullScreenLoading from "@/components/fullscreen-loading";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import JobCard from "./job-card";
 
 import {
@@ -27,6 +27,7 @@ const JobBoard = () => {
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["vacancies", currentPage],
     queryFn: () => fetchJobs(currentPage),
+    placeholderData: keepPreviousData,
   });
 
   if (isLoading || isFetching) return <FullScreenLoading />;
@@ -61,7 +62,6 @@ const JobBoard = () => {
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-      <ScrollRestoration />
     </div>
   );
 };

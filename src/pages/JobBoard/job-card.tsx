@@ -12,7 +12,7 @@ const JobCard = ({ job }: { job: IJob }) => {
 
   return (
     <Link key={job.id} to="#">
-      <Card className="hover:bg-muted">
+      <Card className="hover:shadow-md">
         <CardHeader>
           <CardTitle>{job.name}</CardTitle>
           <CardDescription>
@@ -22,7 +22,7 @@ const JobCard = ({ job }: { job: IJob }) => {
         <CardContent>
           <div
             className={cn(
-              "w-full resize-none bg-inherit whitespace-pre-wrap line-clamp-4",
+              "w-full resize-none bg-inherit whitespace-pre-wrap line-clamp-4 transition-all",
               isShowingMore && "line-clamp-none"
             )}
             ref={ref}
@@ -31,7 +31,11 @@ const JobCard = ({ job }: { job: IJob }) => {
           </div>
           {isTruncated && (
             <div className="text-center">
-              <Button variant="ghost" onClick={toggleIsShowingMore} className="hover:underline">
+              <Button
+                variant="ghost"
+                onClick={toggleIsShowingMore}
+                className="hover:underline hover:bg-inherit"
+              >
                 {isShowingMore ? "Show less" : "Show more"}
               </Button>
             </div>
