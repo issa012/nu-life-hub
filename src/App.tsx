@@ -22,9 +22,12 @@ const router = createBrowserRouter(
       <Route element={<Layout />}>
         <Route index={true} element={<Homepage />} />
         <Route path="events" element={<Events />} />
-        <Route path="marketplace" element={<Marketplace />} />
+        <Route path="marketplace">
+          <Route index={true} element={<Marketplace />} />
+          <Route path=":id" element={<div>Item Page</div>} />
+        </Route>
         <Route path="jobs" element={<JobBoard />} />
-        <Route path="user/:id" element={<UserProfileLayout />} errorElement={<h1>NOT FOUND</h1>}>
+        <Route path="user/:id" element={<UserProfileLayout />}>
           <Route path="profile" element={<UserProfile />} />
           <Route path="posts" />
         </Route>
