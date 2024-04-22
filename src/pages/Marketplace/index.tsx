@@ -20,10 +20,10 @@ import {
 const Marketplace = () => {
   const [searchParams] = useSearchParams();
   const currentPage = searchParams.get("page") ?? 1;
-  const apiClient = useAxiosPrivate();
+  const axiosPrivate = useAxiosPrivate();
 
   const fetchItems = async (page: number | string) => {
-    const response = await apiClient.get(`api/item/?page=${page}`);
+    const response = await axiosPrivate.get(`api/item/?page=${page}`);
     return response.data;
   };
 
@@ -35,8 +35,6 @@ const Marketplace = () => {
 
   if (isLoading || isFetching) return <FullScreenLoading />;
 
-  console.log(data);
-  console.log(currentPage);
   return (
     <div>
       <h1 className="scroll-m-20 pb-2 text-xl font-light tracking-tight">Marketplace</h1>
