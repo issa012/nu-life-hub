@@ -41,7 +41,7 @@ const Events = () => {
   return (
     <div>
       <h1 className="scroll-m-20 pb-2 text-xl font-light tracking-tight">Events</h1>
-      <div className="grid grid-cols-[1fr_auto] gap-7">
+      <div className="grid gap-7">
         <div className="lg:max-h-[700px] overflow-y-scroll flex flex-col gap-5">
           <div>
             <Select onValueChange={(value) => setCategory(value)}>
@@ -60,7 +60,7 @@ const Events = () => {
               </SelectContent>
             </Select>
           </div>
-          <div>
+          <div className="flex flex-row flex-wrap">
             {data.results
               .filter((event) => {
                 if (category) return event.category == category;
@@ -70,10 +70,6 @@ const Events = () => {
                 <EventItem event={event} key={event.id} />
               ))}
           </div>
-        </div>
-        <div className="">
-          <Calendar />
-          <CreateEvent />
         </div>
       </div>
     </div>
