@@ -1,6 +1,7 @@
+import { useEffect, useState } from "react";
 import EventItem, { IEvent } from "./event-item";
 import { Calendar } from "@/components/ui/calendar";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import FullScreenLoading from "@/components/fullscreen-loading";
 import { CreateEvent } from "./create-event";
@@ -13,19 +14,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { useSearchParams } from "react-router-dom";
 
 const Events = () => {
+  const [searchParams] = useSearchParams();
+  const currentPage = searchParams.get("page") ?? 1;
   const apiClient = useAxiosPrivate();
   const [category, setCategory] = useState();
-
-  const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["event-items"],
-    queryFn: async () => {
-      const response = await apiClient.get("api/event");
-      return response.data;
-    },
-  });
 
   const { data: filters, isLoading: filtersLoading } = useQuery({
     queryKey: ["event-categories"],
@@ -35,8 +40,22 @@ const Events = () => {
     },
   });
 
+  const fetchEvents = async (page: string | number) => {
+    const response = await apiClient.get(`api/event/?page=${page}`);
+    return response.data;
+  };
+
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: ["event-items", currentPage],
+    queryFn: () => fetchEvents(currentPage),
+    placeholderData: keepPreviousData,
+  });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPage]);
+
   if (isLoading || isFetching || filtersLoading) return <FullScreenLoading />;
-  console.log(data);
 
   return (
     <div>
@@ -70,6 +89,28 @@ const Events = () => {
                 <EventItem event={event} key={event.id} />
               ))}
           </div>
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious to={`?page=${+currentPage - 1}`} />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink to="?page=1">1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink to="?page=2">2</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink to="?page=3">3</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext to={`?page=${+currentPage + 1}`} />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
     </div>
