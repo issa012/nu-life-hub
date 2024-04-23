@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
 const EventItem = ({ event }: { event: IEvent }) => {
   return (
     <div className="w-full sm:w-1/2 lg:w-1/3 p-3 relative">
