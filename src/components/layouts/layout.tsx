@@ -6,9 +6,10 @@ import useUser from "@/hooks/useUser";
 
 import FullScreenLoading from "../fullscreen-loading";
 import Header from "./header";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function Layout() {
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
   const { data, isLoading, isFetching } = useUser();
   console.log(data);
   if (isLoading || isFetching) {
@@ -26,6 +27,7 @@ export default function Layout() {
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           <Outlet />
         </main>
+        <Toaster />
       </div>
     </div>
   );
