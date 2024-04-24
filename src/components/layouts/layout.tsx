@@ -8,13 +8,13 @@ import FullScreenLoading from "../fullscreen-loading";
 import Header from "./header";
 
 export default function Layout() {
-  const { token } = useAuth();
+  const { user, setUser } = useAuth();
   const { data, isLoading, isFetching } = useUser();
-
+  console.log(data);
   if (isLoading || isFetching) {
     return <FullScreenLoading />;
   }
-  if (!token) {
+  if (!user) {
     return <Navigate to="/auth" />;
   }
 

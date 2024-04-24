@@ -8,9 +8,8 @@ export interface User {
 }
 
 interface AuthContextProps {
-  user: User | null;
-  token: string | null;
-  setToken: React.Dispatch<React.SetStateAction<string | null>>;
+  user: User | null | undefined;
+  setUser: React.Dispatch<React.SetStateAction<User | null | undefined>>;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -18,16 +17,14 @@ interface AuthContextProps {
 
 export const AuthContext = createContext<AuthContextProps>({
   user: null,
-  token: null,
   login: async () => {},
   register: async () => {},
-  setToken: () => {},
+  setUser: () => {},
   logout: async () => {},
 });
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null | undefined>(null);
 
   async function register(email: string, username: string, password: string) {
     await authApi.post("api/register", { email, username, password });
@@ -35,16 +32,15 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   async function login(email: string, password: string) {
     const res = await authApi.post("api/login", { email, password });
-    setToken(res.data.access_token);
+    setUser(res.data);
   }
   async function logout() {
     await authApi.post("api/logout");
-    setToken(null);
     setUser(null);
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, setToken, login, register, logout }}>
+    <AuthContext.Provider value={{ user, setUser, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

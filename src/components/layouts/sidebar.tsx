@@ -2,15 +2,14 @@ import { Link, NavLink } from "react-router-dom";
 import logo from "../../assets/nhl-logo.svg";
 import { cn } from "@/lib/utils";
 import { NavItems } from "./layout";
-import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useQuery } from "@tanstack/react-query";
+import { authApi } from "@/authApi";
 
 const Sidebar = ({ navItems }: { navItems: NavItems }) => {
-  const axiosPrivate = useAxiosPrivate();
   const { data, isLoading } = useQuery({
     queryKey: ["clubs"],
     queryFn: async () => {
-      const res = await axiosPrivate.get("api/club");
+      const res = await authApi.get("api/club");
       return res.data;
     },
   });

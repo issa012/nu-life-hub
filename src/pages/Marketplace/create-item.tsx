@@ -1,4 +1,4 @@
-import FullScreenLoading from "@/components/fullscreen-loading";
+import { authApi } from "@/authApi";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+
 import useUser from "@/hooks/useUser";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -37,8 +37,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export function CreateItem() {
-  const axiosPrivate = useAxiosPrivate();
-
   const itemFormSchema = z.object({
     name: z.string().min(1, { message: "Necessary" }),
     user: z.number(),
@@ -71,7 +69,7 @@ export function CreateItem() {
     // formData.append("user", data?.id);
     console.log(formData);
     try {
-      const res = await axiosPrivate.post("api/item/", formData);
+      const res = await authApi.post("api/item/", formData);
     } catch (error) {
       form.setError("name", { message: "error" });
     }

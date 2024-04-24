@@ -1,18 +1,17 @@
 import FullScreenLoading from "@/components/fullscreen-loading";
-import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import JobCard from "./job-card";
 
 import { useSearchParams } from "react-router-dom";
 import CustomPagination from "@/components/custom-pagination";
+import { authApi } from "@/authApi";
 
 const JobBoard = () => {
   const [searchParams] = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
-  const axiosPrivate = useAxiosPrivate();
 
   const fetchJobs = async (page: number) => {
-    const res = await axiosPrivate.get(`api/vacancy/?page=${page}`);
+    const res = await authApi.get(`api/vacancy/?page=${page}`);
     return res.data;
   };
 

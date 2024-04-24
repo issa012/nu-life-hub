@@ -8,13 +8,14 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
-import { ScrollRestoration } from "react-router-dom";
+import { ScrollRestoration, useSearchParams } from "react-router-dom";
 
 const CustomPagination = ({ count, currentPage }: { count: number; currentPage: number }) => {
-  const arrayRange = (start, stop, step) =>
-    Array.from({ length: (stop - start) / step + 1 }, (value, index) => start + index * step);
-
-  console.log(arrayRange(1, 5, 1));
+  const [searchParams] = useSearchParams();
+  searchParams.set("page", String(currentPage - 1));
+  const prevQueryString = searchParams.toString();
+  searchParams.set("page", String(currentPage + 1));
+  const nextQueryString = searchParams.toString();
 
   return (
     <div>
@@ -22,7 +23,7 @@ const CustomPagination = ({ count, currentPage }: { count: number; currentPage: 
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
-              to={`?page=${+currentPage - 1}`}
+              to={{ search: `?${prevQueryString}` }}
               className={cn(currentPage == 1 && "pointer-events-none text-muted-foreground")}
             />
           </PaginationItem>
@@ -33,16 +34,21 @@ const CustomPagination = ({ count, currentPage }: { count: number; currentPage: 
             </PaginationItem>
           )}
 
-          {Array.from(Array(count).keys()).map((page, id) => (
-            <PaginationItem>
-              <PaginationLink
-                to={`?page=${page + 1}`}
-                className={cn(currentPage == page + 1 && "pointer-events-none bg-muted")}
-              >
-                {page + 1}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
+          {Array.from(Array(count).keys()).map((page) => {
+            searchParams.set("page", String(page + 1));
+            const queryString = searchParams.toString();
+            return (
+              <PaginationItem>
+                <PaginationLink
+                  key={page}
+                  to={`?${queryString}`}
+                  className={cn(currentPage == page + 1 && "bg-muted")}
+                >
+                  {page + 1}
+                </PaginationLink>
+              </PaginationItem>
+            );
+          })}
           {count - currentPage > 5 && (
             <PaginationItem>
               <PaginationEllipsis />
@@ -51,7 +57,7 @@ const CustomPagination = ({ count, currentPage }: { count: number; currentPage: 
 
           <PaginationItem>
             <PaginationNext
-              to={`?page=${+currentPage + 1}`}
+              to={`?${nextQueryString}`}
               className={cn(currentPage == count && "pointer-events-none text-muted-foreground")}
             />
           </PaginationItem>

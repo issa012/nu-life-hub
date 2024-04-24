@@ -1,3 +1,4 @@
+import { authApi } from "@/authApi";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -30,14 +31,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export function CreateEvent() {
-  const axiosPrivate = useAxiosPrivate();
-
   const eventFormSchema = z.object({
     name: z.string().min(1),
     description: z.string().min(1),
@@ -68,7 +66,7 @@ export function CreateEvent() {
     formData.set("image", e.target.image.files[0]);
     console.log(formData);
     try {
-      const res = axiosPrivate.post("api/event/", formData);
+      const res = authApi.post("api/event/", formData);
     } catch (error) {
       form.setError("name", { message: "error" });
     }

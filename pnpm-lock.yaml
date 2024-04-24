@@ -41,6 +41,9 @@ dependencies:
   axios:
     specifier: ^1.6.8
     version: 1.6.8
+  axios-auth-refresh:
+    specifier: ^3.3.6
+    version: 3.3.6(axios@1.6.8)
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.0
@@ -1954,6 +1957,14 @@ packages:
       postcss: 8.4.38
       postcss-value-parser: 4.2.0
     dev: true
+
+  /axios-auth-refresh@3.3.6(axios@1.6.8):
+    resolution: {integrity: sha512-2CeBUce/SxIfFxow5/n8vApJ97yYF6qoV4gh1UrswT7aEOnlOdBLxxyhOI4IaxGs6BY0l8YujU2jlc4aCmK17Q==}
+    peerDependencies:
+      axios: '>= 0.18 < 0.19.0 || >= 0.19.1'
+    dependencies:
+      axios: 1.6.8
+    dev: false
 
   /axios@1.6.8:
     resolution: {integrity: sha512-v/ZHtJDU39mDpyBoFVkETcd/uNdxrWRrg3bKpOKzXFA6Bvqopts6ALSMU3y6ijYxbw2B+wPrIv46egTzJXCLGQ==}

@@ -10,8 +10,8 @@ import { useAuth } from "@/hooks/useAuth";
 import FullScreenLoading from "@/components/fullscreen-loading";
 
 function AuthPage() {
-  const { token } = useAuth();
-  const { isLoading, isFetching } = useUser();
+  const { user, setUser } = useAuth();
+  const { data, isLoading } = useUser();
 
   let [searchParams, setSearchParams] = useSearchParams();
   const initialTab = searchParams.get("tab") || "login";
@@ -21,12 +21,13 @@ function AuthPage() {
     setActiveTab(value);
     setSearchParams({ tab: activeTab == "login" ? "register" : "login" });
   }
-
-  if (isLoading || isFetching) {
+  console.log(user);
+  if (isLoading) {
     return <FullScreenLoading />;
   }
+  setUser(data);
 
-  if (token) {
+  if (user) {
     return <Navigate to="/" />;
   }
 
