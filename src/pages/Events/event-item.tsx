@@ -11,7 +11,7 @@ const EventItem = ({ event }: { event: IEvent }) => {
           />
           <div className="absolute top-0 bottom-0 right-0 left-0 rounded-lg overflow-scroll translate-y-10  hover:translate-y-0 opacity-0 hover:opacity-100 p-8 text-white transition-all bg-gradient-to-t from-neutral-950 via-black/60 to-neutral-950">
             <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">{event.name}</h3>
-            <p className="leading-7 [&:not(:first-child)]:mt-6 whitespace-pre-wrap">
+            <p className="leading-7 [&:not(:first-child)]:mt-6 whitespace-pre-wrap text-xl">
               {event.description}
             </p>
           </div>
