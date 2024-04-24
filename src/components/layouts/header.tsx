@@ -6,7 +6,6 @@ import Status from "../status";
 import logo from "../../assets/nhl-logo.svg";
 import { cn } from "@/lib/utils";
 import { NavItems } from "./layout";
-import Searchbar from "../searchbar";
 
 const Header = ({ navItems }: { navItems: NavItems }) => {
   return (
@@ -42,7 +41,34 @@ const Header = ({ navItems }: { navItems: NavItems }) => {
           </nav>
         </SheetContent>
       </Sheet>
-      <Searchbar />
+      <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+        <Link to="/" className="flex items-center gap-2 font-semibold">
+          <img src={logo} className="" />
+          <span className="scroll-m-20 text-2xl font-semibold tracking-tight text-primary">
+            NU Life Hub
+          </span>
+        </Link>
+      </div>
+
+      <div className="w-full flex-1 ">
+        <nav className="items-start text-base hidden md:flex gap-10">
+          {navItems.map((item) => (
+            <NavLink
+              to={item.href}
+              key={item.text}
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-2 px-2 text-muted-foreground py-2 transition-all hover:text-primary",
+                  isActive && "text-primary border-primary"
+                )
+              }
+            >
+              {item.icon}
+              {item.text}
+            </NavLink>
+          ))}
+        </nav>
+      </div>
       <Status />
     </header>
   );

@@ -6,7 +6,6 @@ import useUser from "@/hooks/useUser";
 
 import FullScreenLoading from "../fullscreen-loading";
 import Header from "./header";
-import Sidebar from "./sidebar";
 
 export default function Layout() {
   const { token } = useAuth();
@@ -20,8 +19,8 @@ export default function Layout() {
   }
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[272px_1fr] lg:grid-cols-[280px_1fr]">
-      <Sidebar navItems={navItems} />
+    <div className="min-h-screen w-full">
+      {/* <Sidebar navItems={navItems} /> */}
       <div className="flex flex-col">
         <Header navItems={navItems} />
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
