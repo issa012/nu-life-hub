@@ -8,12 +8,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import AuthProvider from "./context/auth-provider";
 import Layout from "@/components/layouts/layout";
-import Homepage from "@/pages/Homepage/homepage";
-import AuthPage from "@/pages/Auth";
-import UserProfile from "./pages/UserProfile";
-import Events from "./pages/Events";
-import Marketplace from "./pages/Marketplace";
-import JobBoard from "./pages/JobBoard";
+import Homepage from "@/pages/home/homepage";
+import AuthPage from "@/pages/auth";
+import UserProfile from "./pages/profile";
+import Events from "./pages/events";
+import Marketplace from "./pages/marketplace";
+import JobBoard from "./pages/vacancies";
 import UserProfileLayout from "./components/layouts/userProfileLayout";
 
 const router = createBrowserRouter(

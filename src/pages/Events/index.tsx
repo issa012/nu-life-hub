@@ -1,13 +1,13 @@
-import EventItem from "./event-item";
+import EventItem from "./event-card";
 import { Calendar } from "@/components/ui/calendar";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import FullScreenLoading from "@/components/fullscreen-loading";
-import { CreateEvent } from "./create-event";
 
 import { ScrollRestoration, useSearchParams } from "react-router-dom";
 import CustomPagination from "@/components/custom-pagination";
 import Searchbar from "@/components/searchbar";
 import { authApi } from "@/authApi";
+import { CreateEvent } from "./create-event";
 
 const Events = () => {
   const [searchParams] = useSearchParams();

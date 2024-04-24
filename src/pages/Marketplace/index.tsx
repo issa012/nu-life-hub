@@ -2,13 +2,15 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ScrollRestoration, useSearchParams } from "react-router-dom";
 
 import FullScreenLoading from "@/components/fullscreen-loading";
-import { CreateItem } from "./create-item";
-import Item from "./item";
+
+import Item from "./item-card";
 
 import Searchbar from "@/components/searchbar";
 import CustomPagination from "@/components/custom-pagination";
-import Filters from "./filters";
+
 import { authApi } from "@/authApi";
+import Filters from "./filters";
+import { CreateItem } from "./create-item";
 
 const Marketplace = () => {
   const [searchParams] = useSearchParams();
