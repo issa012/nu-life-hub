@@ -1,20 +1,12 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { Home, Package, ShoppingCart, Users } from "lucide-react";
-
-import { useAuth } from "@/hooks/useAuth";
-import useUser from "@/hooks/useUser";
-
-import FullScreenLoading from "../fullscreen-loading";
 import Header from "./header";
 import { Toaster } from "@/components/ui/sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Layout() {
   const { user } = useAuth();
-  const { data, isLoading, isFetching } = useUser();
-  console.log(data);
-  if (isLoading || isFetching) {
-    return <FullScreenLoading />;
-  }
+
   if (!user) {
     return <Navigate to="/auth" />;
   }
@@ -35,8 +27,8 @@ export default function Layout() {
 
 const navItems = [
   { icon: <Home />, text: "Home", href: "/" },
-  { icon: <ShoppingCart />, text: "Marketplace", href: "marketplace" },
   { icon: <Package />, text: "Events", href: "events" },
+  { icon: <ShoppingCart />, text: "Marketplace", href: "marketplace" },
   { icon: <Users />, text: "Jobs", href: "jobs" },
 ];
 

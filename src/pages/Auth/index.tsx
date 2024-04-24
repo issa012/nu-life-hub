@@ -5,30 +5,22 @@ import LoginForm from "./forms/login-form";
 import RegistrationForm from "./forms/registration-form";
 import NU from "../../assets/bg-nu.png";
 import logo from "../../assets/nhl-logo.svg";
-import useUser from "@/hooks/useUser";
 import { useAuth } from "@/hooks/useAuth";
-import FullScreenLoading from "@/components/fullscreen-loading";
 
 function AuthPage() {
-  const { user, setUser } = useAuth();
-  const { data, isLoading } = useUser();
+  const { user } = useAuth();
 
   let [searchParams, setSearchParams] = useSearchParams();
   const initialTab = searchParams.get("tab") || "login";
   const [activeTab, setActiveTab] = useState<string>(initialTab);
 
+  if (user) {
+    return <Navigate to="/" />;
+  }
+
   function handleValueChange(value: string) {
     setActiveTab(value);
     setSearchParams({ tab: activeTab == "login" ? "register" : "login" });
-  }
-  console.log(user);
-  if (isLoading) {
-    return <FullScreenLoading />;
-  }
-  setUser(data);
-
-  if (user) {
-    return <Navigate to="/" />;
   }
 
   return (

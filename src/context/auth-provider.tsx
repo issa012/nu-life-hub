@@ -1,5 +1,6 @@
 import { authApi } from "@/authApi";
-import { createContext, useState } from "react";
+import FullScreenLoading from "@/components/fullscreen-loading";
+import { createContext, useEffect, useState } from "react";
 
 export interface User {
   email: string;
@@ -25,6 +26,21 @@ export const AuthContext = createContext<AuthContextProps>({
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null | undefined>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await authApi.get("/api/user");
+        setUser(response.data);
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   async function register(email: string, username: string, password: string) {
     await authApi.post("api/register", { email, username, password });
@@ -38,7 +54,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await authApi.post("api/logout");
     setUser(null);
   }
-
+  if (loading) return <FullScreenLoading />;
   return (
     <AuthContext.Provider value={{ user, setUser, login, register, logout }}>
       {children}
