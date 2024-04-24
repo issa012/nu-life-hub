@@ -15,23 +15,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { useSearchParams } from "react-router-dom";
+import CustomPagination from "@/components/custom-pagination";
 
 const Events = () => {
   const [searchParams] = useSearchParams();
-  const currentPage = searchParams.get("page") ?? 1;
+  const currentPage = Number(searchParams.get("page")) || 1;
+
   const apiClient = useAxiosPrivate();
   const [category, setCategory] = useState();
-
   const { data: filters, isLoading: filtersLoading } = useQuery({
     queryKey: ["event-categories"],
     queryFn: async () => {
@@ -40,7 +32,7 @@ const Events = () => {
     },
   });
 
-  const fetchEvents = async (page: string | number) => {
+  const fetchEvents = async (page: number) => {
     const response = await apiClient.get(`api/event/?page=${page}`);
     return response.data;
   };
@@ -51,9 +43,9 @@ const Events = () => {
     placeholderData: keepPreviousData,
   });
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [currentPage]);
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  // }, [currentPage]);
 
   if (isLoading || isFetching || filtersLoading) return <FullScreenLoading />;
 
@@ -62,7 +54,7 @@ const Events = () => {
       <h1 className="scroll-m-20 pb-2 text-xl font-light tracking-tight">Events</h1>
       <div className="grid gap-7">
         <div className="lg:max-h-[700px] overflow-y-scroll flex flex-col gap-5">
-          <div>
+          {/* <div>
             <Select onValueChange={(value) => setCategory(value)}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select a catgeory" />
@@ -78,39 +70,13 @@ const Events = () => {
                 </SelectGroup>
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
           <div className="flex flex-row flex-wrap">
-            {data.results
-              .filter((event) => {
-                if (category) return event.category == category;
-                return true;
-              })
-              .map((event) => (
-                <EventItem event={event} key={event.id} />
-              ))}
+            {data.results.map((event) => (
+              <EventItem event={event} key={event.id} />
+            ))}
           </div>
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious to={`?page=${+currentPage - 1}`} />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink to="?page=1">1</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink to="?page=2">2</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink to="?page=3">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext to={`?page=${+currentPage + 1}`} />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+          <CustomPagination currentPage={currentPage} count={Math.ceil(data.count / 10)} />
         </div>
       </div>
     </div>
