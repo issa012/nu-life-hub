@@ -24,7 +24,7 @@ export default function Layout() {
 }
 
 const navItems = [
-  { icon: <Home />, text: "Home", href: "/" },
+  // { icon: <Home />, text: "Home", href: "/" },
   { icon: <Package />, text: "Events", href: "events" },
   { icon: <ShoppingCart />, text: "Marketplace", href: "marketplace" },
   { icon: <Users />, text: "Jobs", href: "jobs" },

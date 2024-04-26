@@ -1,4 +1,7 @@
+import { Navigate } from "react-router-dom";
+
 const Homepage = () => {
+  return <Navigate to={"events"} />;
   return (
     <div>
       <h1 className="scroll-m-20 pb-2 text-xl font-light tracking-tight">Homepage</h1>
