@@ -41,7 +41,7 @@ const Events = () => {
                     <EventItem event={event} key={event.id} />
                   ))}
                 </div>
-                <CustomPagination currentPage={currentPage} count={data.count} />
+                <CustomPagination currentPage={currentPage} count={data.count} perPage={12} />
               </>
             ) : (
               <div>There are no events</div>
