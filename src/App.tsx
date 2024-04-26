@@ -12,11 +12,11 @@ import UserProfileLayout from "./components/layouts/userProfileLayout";
 import Layout from "@/components/layouts/layout";
 import Homepage from "@/pages/home/homepage";
 import UserProfile from "./pages/profile";
-import AuthPage from "@/pages/auth";
+import AuthPage from "@/pages/authentification";
 import Events from "./pages/events";
-import Marketplace from "./pages/marketplace";
+import Marketplace from "./pages/items";
 import JobBoard from "./pages/vacancies";
-import ItemPage from "./pages/marketplace/item-page";
+import ItemPage from "./pages/items/item-page";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
