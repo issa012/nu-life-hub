@@ -7,18 +7,19 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import AuthProvider from "./context/auth-provider";
+import RootLayout from "./components/layouts/root-layout";
+import UserProfileLayout from "./components/layouts/userProfileLayout";
 import Layout from "@/components/layouts/layout";
 import Homepage from "@/pages/home/homepage";
-import AuthPage from "@/pages/auth";
 import UserProfile from "./pages/profile";
+import AuthPage from "@/pages/auth";
 import Events from "./pages/events";
 import Marketplace from "./pages/marketplace";
 import JobBoard from "./pages/vacancies";
-import UserProfileLayout from "./components/layouts/userProfileLayout";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route id="root" path="/">
+    <Route id="root" path="/" element={<RootLayout />}>
       <Route element={<Layout />}>
         <Route index={true} element={<Homepage />} />
         <Route path="events" element={<Events />} />

@@ -1,7 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { Home, Package, ShoppingCart, Users } from "lucide-react";
 import Header from "./header";
-import { Toaster } from "@/components/ui/sonner";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function Layout() {
@@ -19,7 +18,6 @@ export default function Layout() {
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           <Outlet />
         </main>
-        <Toaster />
       </div>
     </div>
   );
