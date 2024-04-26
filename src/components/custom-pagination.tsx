@@ -10,7 +10,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useSearchParams } from "react-router-dom";
 
-function generatePagination(total_results: number, start_number: number, results_page = 10) {
+function generatePagination(total_results: number, start_number: number, results_page: number) {
   // Test that the first 3 arguments are finite numbers.
   // Using Array.prototype.every() and Number.isFinite().
   const allNumbers = [total_results, results_page, start_number].every(Number.isFinite);
@@ -99,7 +99,7 @@ function generatePagination(total_results: number, start_number: number, results
 const CustomPagination = ({
   count,
   currentPage,
-  perPage = 10,
+  perPage = 12,
 }: {
   count: number;
   currentPage: number;
