@@ -1,12 +1,7 @@
-import { authApi } from "@/authApi";
+import { authApi, setHeaderToken } from "@/api/authApi";
 import FullScreenLoading from "@/components/fullscreen-loading";
+import { User } from "@/types";
 import { createContext, useEffect, useState } from "react";
-
-export interface User {
-  email: string;
-  username: string;
-  id: number;
-}
 
 interface AuthContextProps {
   user: User | null | undefined;
@@ -47,8 +42,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   async function login(email: string, password: string) {
-    const res = await authApi.post("api/login", { email, password });
-    setUser(res.data);
+    const { data } = await authApi.post("api/login", { email, password });
+    setHeaderToken(data.access_token);
+    setUser(data.user_data);
   }
   async function logout() {
     await authApi.post("api/logout");

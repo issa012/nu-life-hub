@@ -1,4 +1,4 @@
-import { authApi } from "@/authApi";
+import { authApi } from "@/api/authApi";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -35,16 +35,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-export function CreateEvent() {
-  const eventFormSchema = z.object({
-    name: z.string().min(1),
-    description: z.string().min(1),
-    category: z.string().min(1),
-    image: z.any(),
-    date: z.string(),
-    location: z.string().min(1),
-  });
+const eventFormSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().min(1),
+  category: z.string().min(1),
+  image: z.any(),
+  date: z.string(),
+  location: z.string().min(1),
+});
 
+export function CreateEvent() {
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
     defaultValues: {

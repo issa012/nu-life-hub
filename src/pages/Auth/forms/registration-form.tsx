@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 function RegistrationForm({
   setActiveTab,
@@ -52,6 +53,9 @@ function RegistrationForm({
 
     try {
       await register(email, username, password);
+      toast.success("Registration successful!", {
+        description: "You can now login",
+      });
       setActiveTab("login");
       setSearchParams({ tab: "login" });
     } catch (error) {

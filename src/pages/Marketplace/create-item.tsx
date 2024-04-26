@@ -1,4 +1,4 @@
-import { authApi } from "@/authApi";
+import { authApi } from "@/api/authApi";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -29,23 +29,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-
-import useUser from "@/hooks/useUser";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { z } from "zod";
 
-export function CreateItem() {
-  const itemFormSchema = z.object({
-    name: z.string().min(1, { message: "Necessary" }),
-    user: z.number(),
-    description: z.string().min(1, { message: "Necessary" }),
-    price: z.string().min(1, { message: "Necessary" }),
-    category: z.string().min(1, { message: "Necessary" }),
-    image: z.any(),
-  });
+const itemFormSchema = z.object({
+  name: z.string().min(1, { message: "Necessary" }),
+  user: z.number(),
+  description: z.string().min(1, { message: "Necessary" }),
+  price: z.string().min(1, { message: "Necessary" }),
+  category: z.string().min(1, { message: "Necessary" }),
+  image: z.any(),
+});
 
+export function CreateItem() {
   const form = useForm<z.infer<typeof itemFormSchema>>({
     resolver: zodResolver(itemFormSchema),
     defaultValues: {

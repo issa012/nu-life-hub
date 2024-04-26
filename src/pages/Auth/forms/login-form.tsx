@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 function LoginForm() {
   const location = useLocation();
@@ -40,7 +41,8 @@ function LoginForm() {
 
     try {
       await login(email, password);
-      navigate(from || "/");
+      toast.success("Login successful");
+      navigate("/");
     } catch (error) {
       form.setError("email", { message: "Incorrect email or password" });
       form.setError("password", { message: "Incorrect email or password" });

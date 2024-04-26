@@ -3,7 +3,7 @@ import logo from "../../assets/nhl-logo.svg";
 import { cn } from "@/lib/utils";
 import { NavItems } from "./layout";
 import { useQuery } from "@tanstack/react-query";
-import { authApi } from "@/authApi";
+import { authApi } from "@/api/authApi";
 
 const Sidebar = ({ navItems }: { navItems: NavItems }) => {
   const { data, isLoading } = useQuery({

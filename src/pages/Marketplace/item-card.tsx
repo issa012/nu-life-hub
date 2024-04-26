@@ -1,3 +1,4 @@
+import { IItem } from "@/types";
 import { Link } from "react-router-dom";
 
 const Item = ({ item }: { item: IItem }) => {
@@ -33,14 +34,3 @@ const Item = ({ item }: { item: IItem }) => {
   );
 };
 export default Item;
-
-interface IItem {
-  id: string;
-  user: string;
-  name: string;
-  description: string;
-  price: string;
-  category: string;
-  image_url: string;
-  created_date: string;
-}

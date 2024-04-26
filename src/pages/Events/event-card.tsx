@@ -1,3 +1,4 @@
+import { IEvent } from "@/types";
 import { Link } from "react-router-dom";
 
 const EventItem = ({ event }: { event: IEvent }) => {
@@ -21,13 +22,3 @@ const EventItem = ({ event }: { event: IEvent }) => {
   );
 };
 export default EventItem;
-
-export interface IEvent {
-  id: number;
-  name: string;
-  date: string;
-  description: string;
-  image_url: string;
-  club: string;
-  clubIconUrl: string;
-}

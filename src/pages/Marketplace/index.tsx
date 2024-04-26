@@ -1,35 +1,9 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { ScrollRestoration, useSearchParams } from "react-router-dom";
-
-import FullScreenLoading from "@/components/fullscreen-loading";
-
-import Item from "./item-card";
-
 import Searchbar from "@/components/searchbar";
-import CustomPagination from "@/components/custom-pagination";
-
-import { authApi } from "@/authApi";
 import Filters from "./filters";
 import { CreateItem } from "./create-item";
+import ItemList from "./list-items";
 
 const Marketplace = () => {
-  const [searchParams] = useSearchParams();
-  const currentPage = Number(searchParams.get("page")) || 1;
-  const category = Number(searchParams.get("category_id"));
-
-  const fetchItems = async (page: number, category: number) => {
-    let queryString = `api/item/?page=${page}`;
-    if (category) queryString += `&category_id=${category}`;
-    const response = await authApi.get(queryString);
-    return response.data;
-  };
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["marketplace-items", currentPage, category],
-    queryFn: () => fetchItems(currentPage, category),
-    placeholderData: keepPreviousData,
-  });
-
   return (
     <div>
       <div className="grid grid-cols-[300px_1fr]">
@@ -42,20 +16,8 @@ const Marketplace = () => {
             <Searchbar />
             <CreateItem />
           </div>
-          {!isLoading ? (
-            <>
-              <ul className="flex flex-row flex-wrap list-none">
-                {data.results.map((item) => (
-                  <Item item={item} key={item.id} />
-                ))}
-              </ul>
-              <CustomPagination currentPage={currentPage} count={Math.ceil(data.count / 10)} />
-            </>
-          ) : (
-            <FullScreenLoading />
-          )}
+          <ItemList />
         </div>
-        <ScrollRestoration />
       </div>
     </div>
   );

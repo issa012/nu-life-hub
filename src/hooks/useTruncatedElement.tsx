@@ -1,6 +1,10 @@
 import { useLayoutEffect, useState } from "react";
 
-export const useTruncatedElement = ({ ref }: { ref: React.MutableRefObject<null> }) => {
+export const useTruncatedElement = ({
+  ref,
+}: {
+  ref: React.MutableRefObject<HTMLDivElement | null>;
+}) => {
   const [isTruncated, setIsTruncated] = useState(false);
   const [isShowingMore, setIsShowingMore] = useState(false);
 

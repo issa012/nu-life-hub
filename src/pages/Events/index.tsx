@@ -3,20 +3,15 @@ import { Calendar } from "@/components/ui/calendar";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import FullScreenLoading from "@/components/fullscreen-loading";
 
-import { ScrollRestoration, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import CustomPagination from "@/components/custom-pagination";
 import Searchbar from "@/components/searchbar";
-import { authApi } from "@/authApi";
 import { CreateEvent } from "./create-event";
+import { fetchEvents } from "./event-service";
 
 const Events = () => {
   const [searchParams] = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
-
-  const fetchEvents = async (page: number) => {
-    const response = await authApi.get(`api/event/?page=${page}`);
-    return response.data;
-  };
 
   const { data, isLoading } = useQuery({
     queryKey: ["event-items", currentPage],
@@ -39,19 +34,22 @@ const Events = () => {
             <CreateEvent />
           </div>
           {!isLoading ? (
-            <>
-              <div className="flex flex-row flex-wrap">
-                {data.results.map((event) => (
-                  <EventItem event={event} key={event.id} />
-                ))}
-              </div>
-              <CustomPagination currentPage={currentPage} count={Math.ceil(data.count / 10)} />{" "}
-            </>
+            data ? (
+              <>
+                <div className="flex flex-row flex-wrap">
+                  {data.results.map((event) => (
+                    <EventItem event={event} key={event.id} />
+                  ))}
+                </div>
+                <CustomPagination currentPage={currentPage} count={data.count} />
+              </>
+            ) : (
+              <div>There are no events</div>
+            )
           ) : (
             <FullScreenLoading />
           )}
         </div>
-        <ScrollRestoration />
       </div>
     </div>
   );
