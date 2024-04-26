@@ -16,6 +16,7 @@ import AuthPage from "@/pages/auth";
 import Events from "./pages/events";
 import Marketplace from "./pages/marketplace";
 import JobBoard from "./pages/vacancies";
+import ItemPage from "./pages/marketplace/item-page";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,7 +26,7 @@ const router = createBrowserRouter(
         <Route path="events" element={<Events />} />
         <Route path="marketplace">
           <Route index={true} element={<Marketplace />} />
-          <Route path=":id" element={<div>Item Page</div>} />
+          <Route path=":id" element={<ItemPage />} />
         </Route>
         <Route path="jobs" element={<JobBoard />} />
         <Route path="user/:id" element={<UserProfileLayout />}>

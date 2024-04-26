@@ -1,6 +1,5 @@
 import { useSearchParams } from "react-router-dom";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { IFetchFromApi, IItem } from "@/types";
 import { fetchItems } from "./item-service";
 import CustomPagination from "@/components/custom-pagination";
 import FullScreenLoading from "@/components/fullscreen-loading";
@@ -11,7 +10,7 @@ const ItemList = () => {
   const currentPage = Number(searchParams.get("page")) || 1;
   const category = Number(searchParams.get("category_id"));
 
-  const { data, isLoading } = useQuery<IFetchFromApi<IItem[]>>({
+  const { data, isLoading } = useQuery({
     queryKey: ["marketplace-items", currentPage, category],
     queryFn: () => fetchItems(currentPage, category),
     placeholderData: keepPreviousData,

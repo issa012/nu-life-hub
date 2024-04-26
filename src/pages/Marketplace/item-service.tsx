@@ -1,14 +1,20 @@
 import { authApi } from "@/api/authApi";
-import { Category } from "@/types";
+import { Category, IItem, IFetchFromApi } from "@/types";
 
 export const fetchItems = async (page: number, category: number) => {
   let queryString = `api/item/?page=${page}`;
   if (category) queryString += `&category_id=${category}`;
-  const response = await authApi.get(queryString);
+  const response = await authApi.get<IFetchFromApi<IItem[]>>(queryString);
   return response.data;
 };
 
 export const fetchItemCategories = async () => {
   const res = await authApi.get<Category[]>("api/item/get_item_categories");
   return res.data;
+};
+
+export const fetchItem = async (id: number) => {
+  let queryString = `api/item/${id}`;
+  const response = await authApi.get<IItem>(queryString);
+  return response.data;
 };
