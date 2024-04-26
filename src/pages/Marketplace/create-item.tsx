@@ -2,6 +2,7 @@ import { authApi } from "@/api/authApi";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -19,20 +20,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import { z } from "zod";
+import CategorySelect from "../../components/select-category";
+import { useQuery } from "@tanstack/react-query";
+import { fetchItemCategories } from "./item-service";
+import FullScreenLoading from "@/components/fullscreen-loading";
 
 const itemFormSchema = z.object({
   name: z.string().min(1, { message: "Necessary" }),
@@ -44,6 +41,11 @@ const itemFormSchema = z.object({
 });
 
 export function CreateItem() {
+  const { data: categories, isLoading: categoriesLoading } = useQuery({
+    queryKey: ["event-categories"],
+    queryFn: () => fetchItemCategories(),
+  });
+
   const form = useForm<z.infer<typeof itemFormSchema>>({
     resolver: zodResolver(itemFormSchema),
     defaultValues: {
@@ -67,11 +69,15 @@ export function CreateItem() {
     // formData.append("user", data?.id);
     console.log(formData);
     try {
-      const res = await authApi.post("api/item/", formData);
+      await authApi.post("api/item/", formData);
+      toast.success("Item created successfully");
     } catch (error) {
+      toast.error("Item creation failed", { description: "Please try again" });
       form.setError("name", { message: "error" });
     }
   }
+
+  if (categoriesLoading) return <FullScreenLoading />;
 
   return (
     <Dialog>
@@ -106,21 +112,11 @@ export function CreateItem() {
                   <FormItem>
                     <FormLabel>Category</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>Categories</SelectLabel>
-                            <SelectItem value="1">Other</SelectItem>
-                            <SelectItem value="2">Banana</SelectItem>
-                            <SelectItem value="3">Blueberry</SelectItem>
-                            <SelectItem value="4">Grapes</SelectItem>
-                            <SelectItem value="5">Pineapple</SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
+                      <CategorySelect
+                        categories={categories}
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -167,7 +163,9 @@ export function CreateItem() {
               )}
             />
             <DialogFooter>
-              <Button type="submit">Create item</Button>
+              <DialogClose asChild>
+                <Button type="submit">Create item</Button>
+              </DialogClose>
             </DialogFooter>
           </form>
         </Form>
