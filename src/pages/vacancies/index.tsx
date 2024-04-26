@@ -6,6 +6,7 @@ import { fetchJobs } from "./job-service";
 import CustomPagination from "@/components/custom-pagination";
 import FullScreenLoading from "@/components/fullscreen-loading";
 import JobCard from "./job-card";
+import Searchbar from "@/components/searchbar";
 
 const JobBoard = () => {
   const [searchParams] = useSearchParams();
@@ -18,16 +19,21 @@ const JobBoard = () => {
   });
 
   return (
-    <div>
-      <h1 className="scroll-m-20 pb-2 text-xl font-light tracking-tight">JobBoard</h1>
-      <div className="grid gap-4">
+    <div className="grid grid-cols-[300px_1fr]">
+      <div>
+        <h1 className="scroll-m-20 pb-2 text-xl font-light tracking-tight">Job Board</h1>
+      </div>
+      <div className="container space-y-4">
+        <div>
+          <Searchbar />
+        </div>
         {!isLoading ? (
           data?.results ? (
-            <div>
+            <div className="grid gap-4">
               {data.results.map((job) => (
                 <JobCard job={job} key={job.id} />
               ))}
-              <CustomPagination currentPage={currentPage} count={data.count} perPage={10} />
+              <CustomPagination currentPage={currentPage} count={data.count} />
             </div>
           ) : (
             <div>There are no jobs available</div>
