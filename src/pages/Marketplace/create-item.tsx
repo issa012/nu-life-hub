@@ -58,18 +58,9 @@ export function CreateItem() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof itemFormSchema>, e) {
-    console.log("erere");
-    const formData = new FormData();
-
-    for (var key in values) {
-      formData.append(key, values[key]);
-    }
-    formData.set("image", e.target.image.files[0]);
-    // formData.append("user", data?.id);
-    console.log(formData);
+  async function onSubmit(values: z.infer<typeof itemFormSchema>) {
     try {
-      await authApi.post("api/item/", formData);
+      await authApi.post("api/item/", values);
       toast.success("Item created successfully");
     } catch (error) {
       toast.error("Item creation failed", { description: "Please try again" });

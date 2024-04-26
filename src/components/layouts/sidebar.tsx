@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { authApi } from "@/api/authApi";
 
 const Sidebar = ({ navItems }: { navItems: NavItems }) => {
-  const { data, isLoading } = useQuery({
+  const { isLoading } = useQuery({
     queryKey: ["clubs"],
     queryFn: async () => {
       const res = await authApi.get("api/club");
@@ -47,11 +47,11 @@ const Sidebar = ({ navItems }: { navItems: NavItems }) => {
           {!isLoading && (
             <div className="grid gap-2 px-2 text-base lg:px-4 pt-4">
               <div className="text-xl">Club list</div>
-              {data.results.map((club) => (
+              {/* {data.results.map((club) => (
                 <div className="px-4 pt-2 text-muted-foreground hover:text-primary" key={club.id}>
                   {club.name}
                 </div>
-              ))}
+              ))} */}
             </div>
           )}
         </div>

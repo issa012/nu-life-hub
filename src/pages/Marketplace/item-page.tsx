@@ -4,11 +4,11 @@ import { fetchItem } from "./item-service";
 import FullScreenLoading from "@/components/fullscreen-loading";
 
 export default function ItemPage() {
-  const { id } = useParams();
+  let { id } = useParams<{ id: string }>();
 
   const { data: item, isLoading } = useQuery({
     queryKey: [`item_${id}`],
-    queryFn: () => fetchItem(id),
+    queryFn: () => fetchItem(id || ""),
   });
   if (isLoading) return <FullScreenLoading />;
   console.log(item);

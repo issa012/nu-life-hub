@@ -38,7 +38,7 @@ function generatePagination(total_results: number, start_number: number, results
   if (length <= 10) {
     // Fill up a new array with the range numbers
     // using Array.from() with a mapping function.
-    let full_array = Array.from(Array(length), (x, index) => index + 1);
+    let full_array = Array.from(Array(length), (_, index) => index + 1);
     return full_array;
   }
 

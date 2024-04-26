@@ -57,16 +57,10 @@ export function CreateEvent() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof eventFormSchema>, e) {
-    const formData = new FormData();
-
-    for (var key in values) {
-      formData.append(key, values[key]);
-    }
-    formData.set("image", e.target.image.files[0]);
-    console.log(formData);
+  async function onSubmit(values: z.infer<typeof eventFormSchema>) {
     try {
-      const res = authApi.post("api/event/", formData);
+      const res = authApi.post("api/event/", values);
+      console.log(res);
     } catch (error) {
       form.setError("name", { message: "error" });
     }

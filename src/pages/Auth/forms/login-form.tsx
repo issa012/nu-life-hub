@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,9 +16,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 
 function LoginForm() {
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const from = params.get("from") || "/";
   const navigate = useNavigate();
 
   const { login } = useAuth();

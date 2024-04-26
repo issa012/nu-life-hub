@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { Home, Package, ShoppingCart, Users } from "lucide-react";
+import { Package, ShoppingCart, Users } from "lucide-react";
 import Header from "./header";
 import { useAuth } from "@/hooks/useAuth";
 

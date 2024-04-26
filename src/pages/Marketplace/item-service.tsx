@@ -13,7 +13,7 @@ export const fetchItemCategories = async () => {
   return res.data;
 };
 
-export const fetchItem = async (id: number) => {
+export const fetchItem = async (id: string) => {
   let queryString = `api/item/${id}`;
   const response = await authApi.get<IItem>(queryString);
   return response.data;
