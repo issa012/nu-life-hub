@@ -35,10 +35,10 @@ import { Textarea } from "@/components/ui/textarea";
 
 const eventFormSchema = z.object({
   user: z.number(),
-  club_id: z.number().gt(0),
+  club: z.string(),
   name: z.string().min(1),
   description: z.string().min(1),
-  category_id: z.string().min(1),
+  category: z.string().min(1),
   image_url: z
     .custom<File>((v) => v instanceof File, {
       message: "Image is required",
@@ -66,10 +66,10 @@ export function CreateEvent() {
     resolver: zodResolver(eventFormSchema),
     defaultValues: {
       user: user!.id,
-      club_id: 0,
+      club: "",
       name: "",
       description: "",
-      category_id: "",
+      category: "",
       image_url: null,
       date: "",
       location: "",
@@ -80,9 +80,9 @@ export function CreateEvent() {
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("user", "" + values.user);
-    formData.append("club_id", "" + values.club_id);
+    formData.append("club_id", "" + values.club);
     formData.append("description", values.description);
-    formData.append("category", values.category_id);
+    formData.append("category", values.category);
     formData.append("date", values.date);
     formData.append("location", values.location);
     if (values.image_url) formData.append("image_url", values.image_url);
@@ -119,9 +119,9 @@ export function CreateEvent() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Event name</FormLabel>
                   <FormControl>
-                    <Input placeholder="example@nu.edu.kz" {...field} />
+                    <Input placeholder="Enter the name of your event" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -130,7 +130,7 @@ export function CreateEvent() {
             <div className="flex gap-2">
               <FormField
                 control={form.control}
-                name="club_id"
+                name="club"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Club</FormLabel>
@@ -138,7 +138,7 @@ export function CreateEvent() {
                       <CategorySelect
                         categories={clubs.results}
                         onValueChange={field.onChange}
-                        defaultValue={"" + field.value}
+                        defaultValue={field.value}
                       />
                     </FormControl>
                     <FormMessage />
@@ -147,7 +147,7 @@ export function CreateEvent() {
               />{" "}
               <FormField
                 control={form.control}
-                name="category_id"
+                name="category"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
