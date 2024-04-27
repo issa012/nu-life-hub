@@ -1,4 +1,16 @@
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useAuth } from "@/hooks/useAuth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { z } from "zod";
+import { fetchAllClubs } from "../clubs/club-service";
+import { useQuery } from "@tanstack/react-query";
 import { authApi } from "@/api/authApi";
+import { fetchEventCategories } from "./event-service";
+
+import FullScreenLoading from "@/components/fullscreen-loading";
+import CategorySelect from "@/components/select-category";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,7 +21,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import {
   Form,
   FormControl,
@@ -20,54 +31,79 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
-
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 const eventFormSchema = z.object({
+  user: z.number(),
+  club_id: z.number().gt(0),
   name: z.string().min(1),
   description: z.string().min(1),
-  category: z.string().min(1),
-  image: z.any(),
+  category_id: z.string().min(1),
+  image_url: z
+    .custom<File>((v) => v instanceof File, {
+      message: "Image is required",
+    })
+    .nullable(),
   date: z.string(),
   location: z.string().min(1),
 });
 
 export function CreateEvent() {
+  const { user } = useAuth();
+  const [open, setOpen] = useState(false);
+
+  const { data: clubs, isLoading: clubsLoading } = useQuery({
+    queryKey: ["club-list"],
+    queryFn: () => fetchAllClubs(),
+  });
+
+  const { data: categories, isLoading: categoriesLoading } = useQuery({
+    queryKey: ["event-categories"],
+    queryFn: () => fetchEventCategories(),
+  });
+
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
     defaultValues: {
+      user: user!.id,
+      club_id: 0,
       name: "",
       description: "",
-      category: "",
-      image: null,
+      category_id: "",
+      image_url: null,
       date: "",
       location: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof eventFormSchema>) {
+    const formData = new FormData();
+    formData.append("name", values.name);
+    formData.append("user", "" + values.user);
+    formData.append("club_id", "" + values.club_id);
+    formData.append("description", values.description);
+    formData.append("category", values.category_id);
+    formData.append("date", values.date);
+    formData.append("location", values.location);
+    if (values.image_url) formData.append("image_url", values.image_url);
     try {
-      const res = authApi.post("api/event/", values);
-      console.log(res);
+      await authApi.post("api/event/", values, {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      });
+      toast.success("Item created successfully");
+      setOpen(false);
+      form.reset();
     } catch (error) {
       form.setError("name", { message: "error" });
     }
   }
 
+  if (clubsLoading || categoriesLoading) return <FullScreenLoading />;
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Create event</Button>
       </DialogTrigger>
@@ -91,6 +127,42 @@ export function CreateEvent() {
                 </FormItem>
               )}
             />
+            <div className="flex gap-2">
+              <FormField
+                control={form.control}
+                name="club_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Club</FormLabel>
+                    <FormControl>
+                      <CategorySelect
+                        categories={clubs.results}
+                        onValueChange={field.onChange}
+                        defaultValue={"" + field.value}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />{" "}
+              <FormField
+                control={form.control}
+                name="category_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <FormControl>
+                      <CategorySelect
+                        categories={categories}
+                        onValueChange={field.onChange}
+                        defaultValue={"" + field.value}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="flex gap-4">
               <FormField
                 control={form.control}
@@ -100,33 +172,6 @@ export function CreateEvent() {
                     <FormLabel>Date</FormLabel>
                     <FormControl>
                       <Input placeholder="" type="datetime-local" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <FormControl>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>Categories</SelectLabel>
-                            <SelectItem value="1">Other</SelectItem>
-                            <SelectItem value="2">Banana</SelectItem>
-                            <SelectItem value="3">Blueberry</SelectItem>
-                            <SelectItem value="4">Grapes</SelectItem>
-                            <SelectItem value="5">Pineapple</SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -161,12 +206,19 @@ export function CreateEvent() {
             />
             <FormField
               control={form.control}
-              name="image"
-              render={({ field }) => (
+              name="image_url"
+              render={({ field: { value, onChange, ...field } }) => (
                 <FormItem>
                   <FormLabel>Image</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your image" type="file" {...field} />
+                    <Input
+                      type="file"
+                      {...field}
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                        //@ts-ignore
+                        onChange(event.target.files[0]);
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
