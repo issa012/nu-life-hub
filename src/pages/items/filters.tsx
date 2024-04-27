@@ -20,6 +20,8 @@ const Filters = () => {
     <div className="space-y-4">
       <div>
         <CategorySelect
+          label="Category"
+          placeholder="Select a category"
           categories={categories}
           value={currentCategory}
           onValueChange={(value) => {
