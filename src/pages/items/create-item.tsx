@@ -58,7 +58,7 @@ export function CreateItem() {
     resolver: zodResolver(itemFormSchema),
     defaultValues: {
       name: "",
-      user: user?.id,
+      user: user!.id,
       description: "",
       image_url: null,
       category: "",
@@ -67,7 +67,6 @@ export function CreateItem() {
   });
 
   async function onSubmit(values: z.infer<typeof itemFormSchema>) {
-    console.log(values);
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("user", "" + values.user);
