@@ -8,6 +8,7 @@ import FullScreenLoading from "@/components/fullscreen-loading";
 import JobCard from "./job-card";
 import Searchbar from "@/components/searchbar";
 import JobFilters from "./filters";
+import { CreateVacancy } from "./create";
 
 const JobBoard = () => {
   const [searchParams] = useSearchParams();
@@ -27,9 +28,10 @@ const JobBoard = () => {
         <h1 className="scroll-m-20 pb-2 text-xl font-light tracking-tight">Job Board</h1>
         <JobFilters />
       </div>
-      <div className="container space-y-4">
-        <div>
+      <div className="container space-y-4 ">
+        <div className="flex justify-between">
           <Searchbar />
+          <CreateVacancy />
         </div>
         {!isLoading ? (
           data?.count ? (
