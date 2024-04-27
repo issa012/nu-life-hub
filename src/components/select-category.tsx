@@ -11,8 +11,8 @@ import { Category } from "@/types";
 
 type CategorySelectProps = React.ComponentProps<typeof Select> & {
   categories: Category[] | undefined;
-  placeholder: string | undefined;
-  label: string | undefined;
+  placeholder?: string;
+  label?: string;
 };
 
 const CategorySelect = (props: CategorySelectProps) => {
