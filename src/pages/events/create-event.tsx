@@ -96,7 +96,7 @@ export function CreateEvent() {
       setOpen(false);
       form.reset();
     } catch (error) {
-      form.setError("name", { message: "error" });
+      form.setError("name", { message: "Some error occured" });
     }
   }
 
