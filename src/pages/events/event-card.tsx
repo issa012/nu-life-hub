@@ -5,7 +5,7 @@ const EventItem = ({ event }: { event: IEvent }) => {
   return (
     <div className="w-full sm:w-1/2 lg:w-1/3 p-3 relative">
       <div className="h-full relative overflow-hidden rounded-lg">
-        <div className="relative rounded-lg overflow-hidden h-full flex justify-center before:block before:content=[''] before:pt-[100%] bg-muted">
+        <div className="relative rounded-lg overflow-hidden h-full flex justify-center before:block before:content=[''] before:pt-[133%] bg-muted">
           <Link to={`${event.id}`}>
             <img
               src={event.image_url}
