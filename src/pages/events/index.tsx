@@ -34,11 +34,10 @@ const Events = () => {
   return (
     <div>
       <div className="grid grid-cols-[300px_1fr]">
-        <div>
+        <div className="space-y-6">
           <h1 className="scroll-m-20 pb-2 text-xl font-light tracking-tight">Events</h1>
-          <div>
-            <EventFilters />
-          </div>
+
+          <EventFilters />
         </div>
         <div className="container space-y-4">
           <div className="flex justify-between items-center">
