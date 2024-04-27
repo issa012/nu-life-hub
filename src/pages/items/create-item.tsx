@@ -1,8 +1,13 @@
+import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
+import { z } from "zod";
 import { authApi } from "@/api/authApi";
-import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -19,17 +24,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
+import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
-import { z } from "zod";
 import CategorySelect from "../../components/select-category";
-import { useQuery } from "@tanstack/react-query";
-import { fetchItemCategories } from "./item-service";
 import FullScreenLoading from "@/components/fullscreen-loading";
+import { fetchItemCategories } from "./item-service";
 
 const itemFormSchema = z.object({
   name: z.string().min(1, { message: "Necessary" }),
@@ -37,10 +37,18 @@ const itemFormSchema = z.object({
   description: z.string().min(1, { message: "Necessary" }),
   price: z.string().min(1, { message: "Necessary" }),
   category: z.string().min(1, { message: "Necessary" }),
-  image: z.any(),
+  image_url: z
+    .custom<File>((v) => v instanceof File, {
+      message: "Image is required",
+    })
+    .nullable(),
 });
 
 export function CreateItem() {
+  const { user } = useAuth();
+
+  const [open, setOpen] = useState(false);
+
   const { data: categories, isLoading: categoriesLoading } = useQuery({
     queryKey: ["event-categories"],
     queryFn: () => fetchItemCategories(),
@@ -50,28 +58,43 @@ export function CreateItem() {
     resolver: zodResolver(itemFormSchema),
     defaultValues: {
       name: "",
-      user: 1,
+      user: user?.id,
       description: "",
+      image_url: null,
       category: "",
-      image: "",
       price: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof itemFormSchema>) {
+    console.log(values);
+    const formData = new FormData();
+    formData.append("name", values.name);
+    formData.append("user", "" + values.user);
+    formData.append("description", values.description);
+    formData.append("price", values.price);
+    formData.append("category", values.category);
+    if (values.image_url) formData.append("image_url", values.image_url);
+
     try {
-      await authApi.post("api/item/", values);
+      await authApi.post("api/item/", formData, {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      });
       toast.success("Item created successfully");
+      setOpen(false);
+      form.reset();
     } catch (error) {
       toast.error("Item creation failed", { description: "Please try again" });
-      form.setError("name", { message: "error" });
+      form.setError("name", { message: "There was an error at some field" });
     }
   }
 
   if (categoriesLoading) return <FullScreenLoading />;
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Create item</Button>
       </DialogTrigger>
@@ -89,7 +112,7 @@ export function CreateItem() {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="example@nu.edu.kz" {...field} />
+                    <Input placeholder="Enter short title for your item" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -142,21 +165,26 @@ export function CreateItem() {
             />
             <FormField
               control={form.control}
-              name="image"
-              render={({ field }) => (
+              name="image_url"
+              render={({ field: { value, onChange, ...field } }) => (
                 <FormItem>
                   <FormLabel>Image</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your image" type="file" {...field} />
+                    <Input
+                      type="file"
+                      {...field}
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                        //@ts-ignore
+                        onChange(event.target.files[0]);
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <DialogFooter>
-              <DialogClose asChild>
-                <Button type="submit">Create item</Button>
-              </DialogClose>
+              <Button type="submit">Create item</Button>
             </DialogFooter>
           </form>
         </Form>

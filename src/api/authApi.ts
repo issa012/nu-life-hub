@@ -4,7 +4,6 @@ import createAuthRefreshInterceptor from "axios-auth-refresh";
 const BASE_URL = "http://130.211.94.133:1337";
 
 export const authApi = axios.create({ baseURL: BASE_URL, withCredentials: true });
-authApi.defaults.headers.common["Content-Type"] = "application/json";
 
 export const setHeaderToken = (token: string) => {
   authApi.defaults.headers.common.Authorization = `Bearer ${token}`;
