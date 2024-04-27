@@ -11,7 +11,7 @@ const JobFilters = () => {
   const currentCategory = searchParams.get("category_id") || "";
 
   const { data: categories, isLoading: categoriesLoading } = useQuery({
-    queryKey: ["item-categories"],
+    queryKey: ["job-categories"],
     queryFn: () => fetchJobCategories(),
   });
 
