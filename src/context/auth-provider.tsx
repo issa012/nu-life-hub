@@ -4,8 +4,8 @@ import { User } from "@/types";
 import { createContext, useEffect, useState } from "react";
 
 interface AuthContextProps {
-  user: User | null | undefined;
-  setUser: React.Dispatch<React.SetStateAction<User | null | undefined>>;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -20,7 +20,7 @@ export const AuthContext = createContext<AuthContextProps>({
 });
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null | undefined>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
