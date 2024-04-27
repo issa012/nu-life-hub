@@ -23,14 +23,12 @@ const Filters = () => {
           categories={categories}
           value={currentCategory}
           onValueChange={(value) => {
-            if (value == "all") {
-              setSearchParams((prev) => {
-                prev.delete("category_id");
-                return prev;
-              });
-              return;
-            }
-            setSearchParams({ category_id: value });
+            setSearchParams((prev) => {
+              prev.delete("page"); // remove page so that page 1 is default
+              prev.set("category_id", value);
+              if (value == "all") prev.delete("category_id");
+              return prev;
+            });
           }}
         />
       </div>

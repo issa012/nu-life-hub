@@ -9,17 +9,18 @@ const ItemList = () => {
   const [searchParams] = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
   const category = Number(searchParams.get("category_id"));
+  const searchTerm = searchParams.get("search");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["marketplace-items", currentPage, category],
-    queryFn: () => fetchItems(currentPage, category),
+    queryKey: ["marketplace-items", currentPage, category, searchTerm],
+    queryFn: () => fetchItems(currentPage, category, searchTerm),
     placeholderData: keepPreviousData,
   });
 
   return (
     <div>
       {!isLoading ? (
-        data ? (
+        data?.count ? (
           <>
             <ul className="flex flex-row flex-wrap list-none">
               {data.results.map((item) => (
