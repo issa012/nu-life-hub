@@ -10,7 +10,7 @@ const Filters = () => {
   const currentCategory = searchParams.get("category_id") || "";
 
   const { data: categories, isLoading: categoriesLoading } = useQuery({
-    queryKey: ["event-categories"],
+    queryKey: ["item-categories"],
     queryFn: () => fetchItemCategories(),
   });
 
