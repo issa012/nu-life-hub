@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useTruncatedElement } from "@/hooks/useTruncatedElement";
 import { IJob } from "@/types";
+import User from "@/components/user";
 
 const JobDescription = ({ description }: { description: string }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -36,15 +37,18 @@ const JobDescription = ({ description }: { description: string }) => {
 };
 
 const JobCard = ({ job }: { job: IJob }) => {
+  console.log(job);
   return (
     <Card className="hover:shadow-md">
       <CardHeader>
         <CardTitle>{job.name}</CardTitle>
         <CardDescription>
-          <span>Date: {job.created_date}</span>
+          <div>Date: {job.created_date}</div>
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <User {...job.user} />
+
         <JobDescription description={job.description} />
       </CardContent>
     </Card>

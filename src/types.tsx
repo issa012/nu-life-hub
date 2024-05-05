@@ -44,6 +44,12 @@ export interface IJob {
   name: string;
   description: string;
   created_date: string;
+  user: {
+    id: number;
+    avatar_url: string;
+    telegram_url: string;
+    username: string;
+  };
 }
 
 export interface IFetchFromApi<Item> {
