@@ -14,13 +14,23 @@ export interface IEvent {
   date: string;
   description: string;
   image_url: string;
-  club: string;
-  clubIconUrl: string;
+  club: {
+    id: number;
+    name: string;
+    image_url: string;
+  };
+  category: number;
+  location: string;
 }
 
 export interface IItem {
   id: string;
-  user: string;
+  user: {
+    id: number;
+    avatar_url: string;
+    telegram_url: string;
+    username: string;
+  };
   name: string;
   description: string;
   price: string;
