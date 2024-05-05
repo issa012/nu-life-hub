@@ -12,16 +12,23 @@ import { CircleUser } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import useUser from "@/hooks/useUser";
 import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const Status = () => {
   const { logout } = useAuth();
   const { data: user } = useUser();
   const navigate = useNavigate();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="secondary" size="icon" className="rounded-full">
-          <CircleUser className="h-5 w-5" />
+          <Avatar>
+            <AvatarImage src={user?.avatar_url} />
+            <AvatarFallback>
+              <CircleUser className="h-5 w-5" />
+            </AvatarFallback>
+          </Avatar>
           <span className="sr-only">Toggle user menu</span>
         </Button>
       </DropdownMenuTrigger>
