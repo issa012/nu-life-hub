@@ -17,7 +17,7 @@ const JobBoard = () => {
   const searchTerm = searchParams.get("search");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["vacancies", currentPage, selectedCategory, searchTerm],
+    queryKey: ["vacancy", currentPage, selectedCategory, searchTerm],
     queryFn: () => fetchJobs(currentPage, selectedCategory, searchTerm),
     placeholderData: keepPreviousData,
   });

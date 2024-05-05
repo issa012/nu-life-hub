@@ -12,7 +12,7 @@ const ItemList = () => {
   const searchTerm = searchParams.get("search");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["marketplace-items", currentPage, category, searchTerm],
+    queryKey: ["item", currentPage, category, searchTerm],
     queryFn: () => fetchItems(currentPage, category, searchTerm),
     placeholderData: keepPreviousData,
   });

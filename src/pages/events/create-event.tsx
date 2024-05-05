@@ -5,9 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { z } from "zod";
 import { fetchAllClubs } from "../clubs/club-service";
-import { useQuery } from "@tanstack/react-query";
-import { authApi } from "@/api/authApi";
-import { fetchEventCategories } from "./event-service";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createEvent, fetchEventCategories } from "./event-service";
 
 import FullScreenLoading from "@/components/fullscreen-loading";
 import CategorySelect from "@/components/select-category";
@@ -32,6 +31,7 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ACCEPTED_IMAGE_MIME_TYPES, MAX_FILE_SIZE } from "@/lib/constants";
 
 const eventFormSchema = z.object({
   user: z.number(),
@@ -40,17 +40,37 @@ const eventFormSchema = z.object({
   description: z.string().min(1),
   category: z.string().min(1),
   image_url: z
-    .custom<File>((v) => v instanceof File, {
-      message: "Image is required",
-    })
-    .nullable(),
+    .any()
+    .refine((file) => {
+      return file?.size <= MAX_FILE_SIZE;
+    }, `Max image size is 5MB.`)
+    .refine(
+      (file) => ACCEPTED_IMAGE_MIME_TYPES.includes(file?.type),
+      "Only .jpg, .jpeg, .png and .webp formats are supported."
+    ),
   date: z.string(),
   location: z.string().min(1),
 });
 
+export type IEventForm = z.infer<typeof eventFormSchema>;
+
 export function CreateEvent() {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
+
+  const { mutateAsync } = useMutation({
+    mutationFn: createEvent,
+    onSuccess: () => {
+      toast.success("Item created successfully");
+      setOpen(false);
+      form.reset();
+      queryClient.invalidateQueries({ queryKey: ["event"] });
+    },
+    onError: () => {
+      form.setError("root.serverError", { message: "Server error occured" });
+    },
+  });
 
   const { data: clubs, isLoading: clubsLoading } = useQuery({
     queryKey: ["club-list"],
@@ -62,7 +82,7 @@ export function CreateEvent() {
     queryFn: () => fetchEventCategories(),
   });
 
-  const form = useForm<z.infer<typeof eventFormSchema>>({
+  const form = useForm<IEventForm>({
     resolver: zodResolver(eventFormSchema),
     defaultValues: {
       user: user!.id,
@@ -76,28 +96,8 @@ export function CreateEvent() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof eventFormSchema>) {
-    const formData = new FormData();
-    formData.append("name", values.name);
-    formData.append("user", "" + values.user);
-    formData.append("club_id", "" + values.club);
-    formData.append("description", values.description);
-    formData.append("category", values.category);
-    formData.append("date", values.date);
-    formData.append("location", values.location);
-    if (values.image_url) formData.append("image_url", values.image_url);
-    try {
-      await authApi.post("api/event/", values, {
-        headers: {
-          "content-type": "multipart/form-data",
-        },
-      });
-      toast.success("Item created successfully");
-      setOpen(false);
-      form.reset();
-    } catch (error) {
-      form.setError("name", { message: "Some error occured" });
-    }
+  async function onSubmit(values: IEventForm) {
+    await mutateAsync(values);
   }
 
   if (clubsLoading || categoriesLoading) return <FullScreenLoading />;
@@ -171,7 +171,7 @@ export function CreateEvent() {
                   <FormItem>
                     <FormLabel>Date</FormLabel>
                     <FormControl>
-                      <Input placeholder="" type="datetime-local" {...field} />
+                      <Input type="datetime-local" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

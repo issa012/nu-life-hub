@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
-import { authApi } from "@/api/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -29,7 +28,8 @@ import { Textarea } from "@/components/ui/textarea";
 
 import CategorySelect from "../../components/select-category";
 import FullScreenLoading from "@/components/fullscreen-loading";
-import { fetchItemCategories } from "./item-service";
+import { createItem, fetchItemCategories } from "./item-service";
+import { ACCEPTED_IMAGE_MIME_TYPES, MAX_FILE_SIZE } from "@/lib/constants";
 
 const itemFormSchema = z.object({
   name: z.string().min(1, { message: "Necessary" }),
@@ -38,23 +38,43 @@ const itemFormSchema = z.object({
   price: z.string().min(1, { message: "Necessary" }),
   category: z.string().min(1, { message: "Necessary" }),
   image_url: z
-    .custom<File>((v) => v instanceof File, {
-      message: "Image is required",
-    })
-    .nullable(),
+    .any()
+    .refine((file) => {
+      return file?.size <= MAX_FILE_SIZE;
+    }, `Max image size is 5MB.`)
+    .refine(
+      (file) => ACCEPTED_IMAGE_MIME_TYPES.includes(file?.type),
+      "Only .jpg, .jpeg, .png and .webp formats are supported."
+    ),
 });
+
+export type IItemForm = z.infer<typeof itemFormSchema>;
 
 export function CreateItem() {
   const { user } = useAuth();
-
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: categories, isLoading: categoriesLoading } = useQuery({
-    queryKey: ["event-categories"],
+    queryKey: ["item-categories"],
     queryFn: () => fetchItemCategories(),
   });
 
-  const form = useForm<z.infer<typeof itemFormSchema>>({
+  const { mutate } = useMutation({
+    mutationFn: createItem,
+    onError: () => {
+      toast.error("Item creation failed", { description: "Please try again" });
+      form.setError("name", { message: "There was an error at some field" });
+    },
+    onSuccess: () => {
+      toast.success("Item created successfully");
+      queryClient.invalidateQueries({ queryKey: ["item"] });
+      setOpen(false);
+      form.reset();
+    },
+  });
+
+  const form = useForm<IItemForm>({
     resolver: zodResolver(itemFormSchema),
     defaultValues: {
       name: "",
@@ -66,28 +86,8 @@ export function CreateItem() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof itemFormSchema>) {
-    const formData = new FormData();
-    formData.append("name", values.name);
-    formData.append("user", "" + values.user);
-    formData.append("description", values.description);
-    formData.append("price", values.price);
-    formData.append("category", values.category);
-    if (values.image_url) formData.append("image_url", values.image_url);
-
-    try {
-      await authApi.post("api/item/", formData, {
-        headers: {
-          "content-type": "multipart/form-data",
-        },
-      });
-      toast.success("Item created successfully");
-      setOpen(false);
-      form.reset();
-    } catch (error) {
-      toast.error("Item creation failed", { description: "Please try again" });
-      form.setError("name", { message: "There was an error at some field" });
-    }
+  async function onSubmit(values: IItemForm) {
+    mutate(values);
   }
 
   if (categoriesLoading) return <FullScreenLoading />;

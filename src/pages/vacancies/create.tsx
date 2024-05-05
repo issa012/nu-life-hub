@@ -1,5 +1,10 @@
-import { authApi } from "@/api/authApi";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import {
   Dialog,
   DialogContent,
@@ -9,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -18,38 +24,48 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
 import { Textarea } from "@/components/ui/textarea";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
-import { z } from "zod";
 import CategorySelect from "../../components/select-category";
-import { useQuery } from "@tanstack/react-query";
 
 import FullScreenLoading from "@/components/fullscreen-loading";
-import { fetchJobCategories } from "./job-service";
+import { createVacancy, fetchJobCategories } from "./job-service";
 import { useAuth } from "@/hooks/useAuth";
-import { useState } from "react";
 
-const jobFormSchema = z.object({
+const VacancyFormSchema = z.object({
   name: z.string().min(1, { message: "Please fill out this field" }),
   user: z.number(),
   description: z.string().min(1, { message: "Please fill out this field" }),
   category: z.string().min(1, { message: "Please fill out this field" }),
 });
 
+export type IVacancyForm = z.infer<typeof VacancyFormSchema>;
+
 export function CreateVacancy() {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: createVacancy,
+    onSuccess: () => {
+      setOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["vacancy"] });
+      toast.success("Item created successfully");
+      form.reset();
+    },
+    onError: () => {
+      toast.error("Item creation failed", { description: "Please try again" });
+      form.setError("root.serverError", { message: "Server error occured. Please try again" });
+    },
+  });
   const { data: categories, isLoading: categoriesLoading } = useQuery({
     queryKey: ["job-categories"],
     queryFn: () => fetchJobCategories(),
   });
 
-  const form = useForm<z.infer<typeof jobFormSchema>>({
-    resolver: zodResolver(jobFormSchema),
+  const form = useForm<IVacancyForm>({
+    resolver: zodResolver(VacancyFormSchema),
     defaultValues: {
       name: "",
       user: user?.id,
@@ -58,15 +74,8 @@ export function CreateVacancy() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof jobFormSchema>) {
-    try {
-      await authApi.post("api/item/", values);
-      setOpen(false);
-      toast.success("Item created successfully");
-    } catch (error) {
-      toast.error("Item creation failed", { description: "Please try again" });
-      form.setError("name", { message: "error" });
-    }
+  async function onSubmit(values: IVacancyForm) {
+    mutate(values);
   }
 
   if (categoriesLoading) return <FullScreenLoading />;

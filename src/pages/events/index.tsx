@@ -18,14 +18,7 @@ const Events = () => {
   const selectedDate = searchParams.get("date");
 
   const { data, isLoading } = useQuery({
-    queryKey: [
-      "event-items",
-      currentPage,
-      selectedCategory,
-      selectedClub,
-      searchTerm,
-      selectedDate,
-    ],
+    queryKey: ["event", currentPage, selectedCategory, selectedClub, searchTerm, selectedDate],
     queryFn: () =>
       fetchEvents(currentPage, selectedCategory, selectedClub, searchTerm, selectedDate),
     placeholderData: keepPreviousData,
