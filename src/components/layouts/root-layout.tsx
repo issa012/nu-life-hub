@@ -5,7 +5,7 @@ export default function RootLayout() {
   return (
     <>
       <Outlet />
-      <Toaster richColors />
+      <Toaster richColors position="top-right" />
       <ScrollRestoration />
     </>
   );
